@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.job4j.chat.ChatApplication;
 import ru.job4j.chat.model.Message;
@@ -37,6 +38,7 @@ class RoomControllerTest {
     private RoomController rooms;
 
     @Test
+    @WithMockUser
     public void whenFindAll() throws Exception {
         Room r1 = Room.of("Room1");
         Room r2 = Room.of("Room2");
@@ -57,6 +59,7 @@ class RoomControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenAdd() throws Exception {
         Room r = Room.of("Room1");
         when(rooms.create(any(Room.class))).thenReturn(new ResponseEntity<>(r, HttpStatus.OK));
@@ -72,6 +75,7 @@ class RoomControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenUpdate() throws Exception {
         when(rooms.update(any(Room.class))).thenReturn(new ResponseEntity<>(HttpStatus.OK));
         mockMvc.perform(put("/rooms/")
@@ -86,6 +90,7 @@ class RoomControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenFindById() throws Exception {
         Room r = Room.of("Room1");
         r.setId(1);
@@ -101,6 +106,7 @@ class RoomControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenDelete() throws Exception {
         when(rooms.delete(anyInt())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
         mockMvc.perform(delete("/rooms/1"))
@@ -111,6 +117,7 @@ class RoomControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenFindByMessagesByRoomId() throws Exception {
         Room r = Room.of("Room1");
         r.setId(1);
@@ -142,6 +149,7 @@ class RoomControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenCreateMessage() throws Exception {
         Room r = Room.of("Room1");
         Person p = Person.of(1, "user2", "user");
@@ -159,6 +167,7 @@ class RoomControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenDeleteMessage() throws Exception {
         when(rooms.deleteMessage(anyInt(), anyInt())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
         mockMvc.perform(delete("/rooms/1/delete/1"))
