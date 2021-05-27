@@ -1,5 +1,6 @@
 package ru.job4j.chat.controller;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.job4j.chat.ChatApplication;
 import ru.job4j.chat.model.Message;
@@ -38,6 +40,7 @@ class MessageControllerTest {
     private MessageController messages;
 
     @Test
+    @WithMockUser
     public void whenFindAll() throws Exception {
         Room r = Room.of("Room1");
         Person p = Person.of(1, "user2", "user");
@@ -69,6 +72,7 @@ class MessageControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenAdd() throws Exception {
         Room r = Room.of("Room1");
         Person p = Person.of(1, "user2", "user");
@@ -88,6 +92,7 @@ class MessageControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenUpdate() throws Exception {
         when(messages.update(any(Message.class))).thenReturn(new ResponseEntity<>(HttpStatus.OK));
         mockMvc.perform(put("/messages/")
@@ -98,10 +103,11 @@ class MessageControllerTest {
         verify(messages, times(1)).update(any(Message.class));
         ArgumentCaptor<Message> arg = ArgumentCaptor.forClass(Message.class);
         verify(messages).update(arg.capture());
-        assertEquals("msg1", arg.getValue().getText());
+        Assertions.assertEquals("msg1", arg.getValue().getText());
     }
 
     @Test
+    @WithMockUser
     public void whenFindById() throws Exception {
         Room r = Room.of("Room1");
         Person p = Person.of(1, "user2", "user");
@@ -124,6 +130,7 @@ class MessageControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void whenDelete() throws Exception {
         when(messages.delete(anyInt())).thenReturn(new ResponseEntity<>(HttpStatus.OK));
         mockMvc.perform(delete("/messages/2"))
